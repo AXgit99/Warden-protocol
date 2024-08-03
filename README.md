@@ -33,20 +33,27 @@ curl -L https://snapshots-testnet.nodejumper.io/wardenprotocol-testnet/addrbook.
 ```
 sed -i -e 's|^seeds *=.*|seeds = "ddb4d92ab6eba8363bab2f3a0d7fa7a970ae437f@sentry-1.buenavista.wardenprotocol.org:26656,c717995fd56dcf0056ed835e489788af4ffd8fe8@sentry-2.buenavista.wardenprotocol.org:26656,e1c61de5d437f35a715ac94b88ec62c482edc166@sentry-3.buenavista.wardenprotocol.org:26656"|' $HOME/.warden/config/config.toml
 ```
-# Set minimum gas price
+**Set minimum gas price**
+```
 sed -i -e 's|^minimum-gas-prices *=.*|minimum-gas-prices = "0.01uward"|' $HOME/.warden/config/app.toml
+```
 
-# Set pruning
+**Set pruning**
+```
 sed -i \
   -e 's|^pruning *=.*|pruning = "custom"|' \
   -e 's|^pruning-keep-recent *=.*|pruning-keep-recent = "100"|' \
   -e 's|^pruning-interval *=.*|pruning-interval = "17"|' \
   $HOME/.warden/config/app.toml
+```
 
-# Download latest chain data snapshot
+**Download latest chain data snapshot**
+```
 curl "https://snapshots-testnet.nodejumper.io/wardenprotocol-testnet/wardenprotocol-testnet_latest.tar.lz4" | lz4 -dc - | tar -xf - -C "$HOME/.warden"
+```
 
-# Create a service
+**Create a service**
+```
 sudo tee /etc/systemd/system/wardend.service > /dev/null << EOF
 [Unit]
 Description=Warden Protocol node service
@@ -62,7 +69,10 @@ WantedBy=multi-user.target
 EOF
 sudo systemctl daemon-reload
 sudo systemctl enable wardend.service
+```
 
-# Start the service and check the logs
+**Start the service and check the logs**
+```
 sudo systemctl start wardend.service
 sudo journalctl -u wardend.service -f --no-hostname -o cat
+```
